@@ -14,7 +14,10 @@ import {
   View,
   Text,
   StatusBar,
+  Button,
 } from 'react-native';
+
+import ImagePicker from 'react-native-image-picker'
 
 import {
   Header,
@@ -24,7 +27,71 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-const App: () => React$Node = () => {
+import S3 from 'aws-sdk/clients/s3';
+import {Credentials} from 'aws-sdk';
+import {v4 as uuid} from 'uuid';
+
+const App = () => {
+  const chooseImage = async () => {
+    let options = {
+      title: 'Upload Prescription',
+      takePhotoButtonTitle: 'Take a Photo',
+      chooseFromLibraryButtonTitle: 'Select From Gallery',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.showImagePicker(options, async (response) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        const file = {
+          uri: response.uri,
+          name: response.fileName,
+          type: 'image/jpeg',
+        };
+        uploadImageOnS3(file);
+      }
+    });
+  };
+
+  const uploadImageOnS3 = async (file) => {
+    const s3bucket = new S3({
+      accessKeyId: '...',
+      secretAccessKey: '...',
+      Bucket: 'upload-s3-image-test-bucket',
+      signatureVersion: 'v4',
+    });
+    let contentType = 'image/jpeg';
+    let contentDeposition = 'inline;filename="' + file.name + '"';
+    const base64 = await fs.readFile(file.uri, 'base64');
+    const arrayBuffer = decode(base64);
+
+    s3bucket.createBucket(() => {
+      const params = {
+        Bucket: '',
+        Key: file.name,
+        Body: arrayBuffer,
+        ContentDisposition: contentDeposition,
+        ContentType: contentType,
+      };
+
+      s3bucket.upload(params, (err, data) => {
+        if (err) {
+          console.log('error in callback');
+        }
+        console.log('success');
+        console.log('Response URL : ' + data.Location);
+      });
+    });
+  };
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -64,7 +131,7 @@ const App: () => React$Node = () => {
                 Read the docs to discover what to do next:
               </Text>
             </View>
-            <LearnMoreLinks />
+            <Button onPress={() => chooseImage()} title="Click me" />
           </View>
         </ScrollView>
       </SafeAreaView>
