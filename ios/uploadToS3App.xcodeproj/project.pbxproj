@@ -59,6 +59,7 @@
 		92F255571981946AAB40C165 /* Pods-uploadToS3App-uploadToS3AppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-uploadToS3App-uploadToS3AppTests.debug.xcconfig"; path = "Target Support Files/Pods-uploadToS3App-uploadToS3AppTests/Pods-uploadToS3App-uploadToS3AppTests.debug.xcconfig"; sourceTree = "<group>"; };
 		9A9877E74BB50002E0DEC44B /* Pods-uploadToS3App-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-uploadToS3App-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-uploadToS3App-tvOSTests/Pods-uploadToS3App-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		9B81293A9DB04003C7D4766B /* Pods-uploadToS3App-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-uploadToS3App-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-uploadToS3App-tvOS/Pods-uploadToS3App-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		B473268A25810130000C7504 /* ImagePickerManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ImagePickerManager.m; path = "../node_modules/react-native-image-picker/ios/ImagePickerManager.m"; sourceTree = "<group>"; };
 		C619499369276CEBF7CAD0FB /* Pods-uploadToS3App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-uploadToS3App.debug.xcconfig"; path = "Target Support Files/Pods-uploadToS3App/Pods-uploadToS3App.debug.xcconfig"; sourceTree = "<group>"; };
 		D9D502A5253475FD8637A20F /* libPods-uploadToS3App.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-uploadToS3App.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB6561A4D30C0E177B84386C /* libPods-uploadToS3App-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-uploadToS3App-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -148,7 +149,6 @@
 				92F255571981946AAB40C165 /* Pods-uploadToS3App-uploadToS3AppTests.debug.xcconfig */,
 				DFF594460A4F18A7661CF913 /* Pods-uploadToS3App-uploadToS3AppTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -175,6 +175,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				B473268A25810130000C7504 /* ImagePickerManager.m */,
 				13B07FAE1A68108700A75B9A /* uploadToS3App */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* uploadToS3AppTests */,
