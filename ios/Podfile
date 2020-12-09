@@ -8,6 +8,7 @@ target 'uploadToS3App' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+
   target 'uploadToS3AppTests' do
     inherit! :complete
     # Pods for testing
