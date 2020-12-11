@@ -1,11 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React from 'react';
 import {
   SafeAreaView,
@@ -28,63 +20,17 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 var fs = require('react-native-fs');
+var base64 = require('base-64');
 
-import S3 from 'aws-sdk/clients/s3';
-import {Credentials} from 'aws-sdk';
-import {v4 as uuid} from 'uuid';
+import S3, {ManagedUpload} from 'aws-sdk/clients/s3';
+// import {decode} from './utils';
+import {ImagePickerResponse} from 'react-native-image-picker';
+import {ACCESS_KEY_ID, SECRET_ACCESS_KEY} from './secrets';
+// import {Credentials} from 'aws-sdk';
+// import {v4 as uuid} from 'uuid';
 
 const App = () => {
-  const decode = function (input) {
-    let keyStr =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-    var output = '';
-    var chr1,
-      chr2,
-      chr3 = '';
-    var enc1,
-      enc2,
-      enc3,
-      enc4 = '';
-    var i = 0;
-
-    // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
-    var base64test = /[^A-Za-z0-9\+\/\=]/g;
-    if (base64test.exec(input)) {
-      window.alert(
-        'There were invalid base64 characters in the input text.\n' +
-          "Valid base64 characters are A-Z, a-z, 0-9, '+', '/',and '='\n" +
-          'Expect errors in decoding.',
-      );
-    }
-    input = input.replace(/[^A-Za-z0-9\+\/\=]/g, '');
-
-    do {
-      enc1 = keyStr.indexOf(input.charAt(i++));
-      enc2 = keyStr.indexOf(input.charAt(i++));
-      enc3 = keyStr.indexOf(input.charAt(i++));
-      enc4 = keyStr.indexOf(input.charAt(i++));
-
-      chr1 = (enc1 << 2) | (enc2 >> 4);
-      chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
-      chr3 = ((enc3 & 3) << 6) | enc4;
-
-      output = output + String.fromCharCode(chr1);
-
-      if (enc3 != 64) {
-        output = output + String.fromCharCode(chr2);
-      }
-      if (enc4 != 64) {
-        output = output + String.fromCharCode(chr3);
-      }
-
-      chr1 = chr2 = chr3 = '';
-      enc1 = enc2 = enc3 = enc4 = '';
-    } while (i < input.length);
-
-    return output;
-  };
   const chooseImage = async () => {
-    console.log('fuckyou bitch', ImagePicker);
     let options = {
       title: 'Upload Prescription',
       takePhotoButtonTitle: 'Take a Photo',
@@ -94,55 +40,47 @@ const App = () => {
         path: 'images',
       },
     };
-    ImagePicker.launchImageLibrary(options, async (response) => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-        alert(response.customButton);
-      } else {
-        const file = {
-          uri: response.uri,
-          name: response.fileName,
-          base64: response.base64,
-          type: 'image/jpeg',
-        };
-        console.log('::myFile', response);
-        uploadImageOnS3(file);
-      }
-    });
+    ImagePicker.launchImageLibrary(
+      options,
+      async (response: ImagePickerResponse) => {
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else {
+          uploadImageOnS3(response);
+        }
+      },
+    );
   };
 
-  const uploadImageOnS3 = async (file) => {
+  const uploadImageOnS3 = async (file: ImagePickerResponse) => {
+    console.log('::uploadImageOnS3', file);
+
     const s3bucket = new S3({
-      accessKeyId: "",
-      secretAccessKey: '',
-      Bucket: 'upload-s3-image-test-bucket',
+      accessKeyId: ACCESS_KEY_ID,
+      secretAccessKey: SECRET_ACCESS_KEY,
       signatureVersion: 'v4',
     });
-    let contentType = 'image/jpeg';
-    let contentDeposition = 'inline;filename="' + file.name + '"';
-    const base64 = await fs.readFile(file.uri, 'base64');
-    const arrayBuffer = decode(base64);
 
-    s3bucket.createBucket(() => {
-      const params = {
-        Bucket: '',
-        Key: file.name,
-        Body: arrayBuffer,
-        ContentDisposition: contentDeposition,
-        ContentType: contentType,
-      };
+    let contentType = file.type || 'image/jpeg';
+    let contentDeposition = 'inline;filename="' + file.fileName + '"';
+    const base64URI = await fs.readFile(file.uri, 'base64');
+    const arrayBuffer = base64.decode(base64URI);
 
-      s3bucket.upload(params, (err, data) => {
-        if (err) {
-          console.log('error in callback', err);
-        }
-        console.log('success');
-        console.log('Response URL : ' + data);
-      });
+    const params = {
+      Bucket: 'upload-s3-image-test-bucket',
+      Key: file.fileName || 'abc',
+      Body: arrayBuffer,
+      ContentDisposition: contentDeposition,
+      ContentType: contentType,
+    };
+    console.log('::here', s3bucket, params);
+
+    s3bucket.upload(params, (err: Error, data: ManagedUpload.SendData) => {
+      if (err) {
+        console.log('error in callback', err);
+      }
+      console.log('success');
+      console.log('Response URL : ' + data);
     });
   };
 
@@ -154,6 +92,7 @@ const App = () => {
           contentInsetAdjustmentBehavior="automatic"
           style={styles.scrollView}>
           <Header />
+          {/* @ts-ignore-next-line */}
           {global.HermesInternal == null ? null : (
             <View style={styles.engine}>
               <Text style={styles.footer}>Engine: Hermes</Text>
