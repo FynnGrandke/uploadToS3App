@@ -7,29 +7,31 @@ import {
   Text,
   StatusBar,
   Button,
+  Image,
 } from 'react-native';
 
 var ImagePicker = require('react-native-image-picker');
 
 import {
   Header,
-  LearnMoreLinks,
   Colors,
-  DebugInstructions,
-  ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
 var fs = require('react-native-fs');
-var base64 = require('base-64');
 
-import S3, {ManagedUpload} from 'aws-sdk/clients/s3';
-// import {decode} from './utils';
+import S3 from 'aws-sdk/clients/s3';
+
 import {ImagePickerResponse} from 'react-native-image-picker';
-import {ACCESS_KEY_ID, SECRET_ACCESS_KEY} from './secrets';
-// import {Credentials} from 'aws-sdk';
-// import {v4 as uuid} from 'uuid';
+import {ACCESS_KEY_ID, BUCKET_NAME, REGION, SECRET_ACCESS_KEY} from './secrets';
 
 const App = () => {
+  const s3 = new S3({
+    accessKeyId: ACCESS_KEY_ID,
+    secretAccessKey: SECRET_ACCESS_KEY,
+    signatureVersion: 'v4',
+    region: REGION,
+  });
+
   const chooseImage = async () => {
     let options = {
       title: 'Upload Prescription',
@@ -53,35 +55,52 @@ const App = () => {
   };
 
   const uploadImageOnS3 = async (file: ImagePickerResponse) => {
-    console.log('::uploadImageOnS3', file);
-
-    const s3bucket = new S3({
-      accessKeyId: ACCESS_KEY_ID,
-      secretAccessKey: SECRET_ACCESS_KEY,
-      signatureVersion: 'v4',
-    });
-
-    let contentType = file.type || 'image/jpeg';
-    let contentDeposition = 'inline;filename="' + file.fileName + '"';
+    const contentType = file.type as string;
+    const contentDeposition = 'inline;filename="' + file.fileName + '"';
     const base64URI = await fs.readFile(file.uri, 'base64');
-    const arrayBuffer = base64.decode(base64URI);
-
-    const params = {
-      Bucket: 'upload-s3-image-test-bucket',
-      Key: file.fileName || 'abc',
-      Body: arrayBuffer,
-      ContentDisposition: contentDeposition,
+    const fileKey = new Date().toISOString() + file.fileName;
+    const s3Params = {
+      Bucket: BUCKET_NAME,
+      Key: fileKey,
+      ContentEncoding: 'buffer',
       ContentType: contentType,
+      ContentDisposition: contentDeposition,
+      ACL: 'public-read',
     };
-    console.log('::here', s3bucket, params);
 
-    s3bucket.upload(params, (err: Error, data: ManagedUpload.SendData) => {
-      if (err) {
-        console.log('error in callback', err);
-      }
-      console.log('success');
-      console.log('Response URL : ' + data);
-    });
+    fetch(`data:${contentType};base64,` + base64URI, {
+      headers: {
+        'Content-Type': contentType + ';base64',
+      },
+    })
+      .then((res) => {
+        res.blob().then((res) => {
+          s3.putObject({
+            ...s3Params,
+            Body: res,
+            Metadata: {'upload-date': new Date().toISOString()},
+          })
+            .promise()
+            .catch((err) => {
+              console.error('Uploading file failed:', err);
+            });
+        });
+      })
+      .catch((err) => console.error('Cannot get blob from file:', err));
+  };
+
+  const listObjects = () => {
+    s3.listObjectsV2({Bucket: BUCKET_NAME})
+      .promise()
+      .then((res) => {
+        console.log(res.Contents);
+        res.Contents?.forEach((file) =>
+          s3
+            .getObject({Bucket: BUCKET_NAME, Key: file.Key as string})
+            .promise()
+            .then((res) => console.log(res)),
+        );
+      });
   };
 
   return (
@@ -92,39 +111,15 @@ const App = () => {
           contentInsetAdjustmentBehavior="automatic"
           style={styles.scrollView}>
           <Header />
-          {/* @ts-ignore-next-line */}
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
           <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
             <View style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>Learn More</Text>
               <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
+                Tab the button to upload a file
               </Text>
             </View>
-            <Button onPress={() => chooseImage()} title="Click me" />
+            <Button onPress={() => chooseImage()} title="Upload Image" />
+            <Button onPress={() => listObjects()} title="List Objects" />
           </View>
         </ScrollView>
       </SafeAreaView>
