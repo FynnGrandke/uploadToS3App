@@ -10,7 +10,9 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.13.2",
     "aws-sdk": "^2.806.0",
+    "base64-arraybuffer": "^0.2.0",
     "react": "16.13.1",
     "react-native": "0.63.4",
     "react-native-fs": "^2.16.6",
