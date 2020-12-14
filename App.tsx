@@ -126,7 +126,6 @@ const App = () => {
             }
           }),
       );
-      console.log('fetchedAll', await getData('filenames'));
       setFetchedAllData(true);
     });
   };
