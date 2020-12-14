@@ -108,35 +108,37 @@ const App = () => {
     }
   };
 
-  const [fetchedAllData, setFetchedAllData] = useState(false);
+  const [fetchedFilenames, setFetchedFilenames] = useState([]);
 
   const listObjects = () => {
     getAllS3Files().then(async (res) => {
-      const promises = res?.map(s3Object => {
+      const promises = res?.map((s3Object) => {
         return getS3File(s3Object.Key as string).then(async (res) => {
           const filename = s3Object.Key as string;
           await storeData(filename, res);
-          console.log('stored data')
+          console.log('stored data');
           if ((await getData('filenames')) === null) {
             await storeData('filenames', JSON.stringify([filename]));
           } else {
-            const storedFilenames: string[] = JSON.parse(await getData('filenames'));
+            const storedFilenames: string[] = JSON.parse(
+              await getData('filenames'),
+            );
             storedFilenames.push(filename);
             await storeData('filenames', JSON.stringify(storedFilenames));
           }
-        })
-      }) as Promise<void>[]
-      console.log('::before')
-      await Promise.all(promises)
-      console.log('::after')
+        });
+      }) as Promise<void>[];
+      console.log('::before');
+      await Promise.all(promises);
+      console.log('::after');
 
-      const something = await getData('filenames')
-      console.log('fetchedAll', something);
-      setFetchedAllData(true);
+      const filenames = JSON.parse(await getData('filenames'));
+      console.log('fetchedAll', filenames);
+      setFetchedFilenames(filenames);
     });
   };
 
-  console.log('render')
+  console.log('render');
 
   return (
     <>
@@ -157,7 +159,11 @@ const App = () => {
             <Button onPress={() => listObjects()} title="List Objects" />
           </View>
           <View style={styles.imagePane}>
-            {fetchedAllData === false ? null : null}
+            {fetchedFilenames.length === 0 ? null : fetchedFilenames.map(async filename => {
+              const file = await getData(filename)
+              console.log(filename, file)
+              return <Image source={file} style={styles.image} />
+            })}
           </View>
         </ScrollView>
       </SafeAreaView>
