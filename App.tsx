@@ -112,23 +112,31 @@ const App = () => {
 
   const listObjects = () => {
     getAllS3Files().then(async (res) => {
-      await res?.forEach(
-        async (file) =>
-          await getS3File(file.Key as string).then(async (res) => {
-            const filename = file.Key as string;
-            await storeData(filename, res);
-            if ((await getData('filenames')) === null) {
-              await storeData('filenames', JSON.stringify([filename]));
-            } else {
-              const storedFilenames: string[] = await getData('filenames');
-              storedFilenames.push(filename);
-              await storeData('filenames', JSON.stringify(storedFilenames));
-            }
-          }),
-      );
+      const promises = res?.map(s3Object => {
+        return getS3File(s3Object.Key as string).then(async (res) => {
+          const filename = s3Object.Key as string;
+          await storeData(filename, res);
+          console.log('stored data')
+          if ((await getData('filenames')) === null) {
+            await storeData('filenames', JSON.stringify([filename]));
+          } else {
+            const storedFilenames: string[] = JSON.parse(await getData('filenames'));
+            storedFilenames.push(filename);
+            await storeData('filenames', JSON.stringify(storedFilenames));
+          }
+        })
+      }) as Promise<void>[]
+      console.log('::before')
+      await Promise.all(promises)
+      console.log('::after')
+
+      const something = await getData('filenames')
+      console.log('fetchedAll', something);
       setFetchedAllData(true);
     });
   };
+
+  console.log('render')
 
   return (
     <>
