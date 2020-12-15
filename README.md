@@ -25,3 +25,12 @@ then run `yarn android` for the Android emulator or `yarn ios` for the iOS simul
 ### Debug Menu
 
 For Android press `CMD + M` and for iOS press `CMD + D`
+
+## Running the tests
+
+Tests are to be implemented at a later stage of this project. (TODO: SOON!)
+
+## Built With
+
+* [react native](https://github.com/facebook/react-native) - JavaScript library for building user interface
+* [AWS](https://github.com/aws/aws-sdk-js) - The database for modern applications
