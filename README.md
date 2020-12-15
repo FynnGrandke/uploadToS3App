@@ -34,3 +34,19 @@ Tests are to be implemented at a later stage of this project. (TODO: SOON!)
 
 * [react native](https://github.com/facebook/react-native) - JavaScript library for building user interface
 * [AWS](https://github.com/aws/aws-sdk-js) - The database for modern applications
+
+## Contributing
+
+Not yet available - in the meantime write me a message!
+
+## Authors
+
+* **Fynn Grandke** - *Initial work* - [FynnGrandke](https://github.com/FynnGrandke)
+
+## License
+
+TBA
+
+## Information
+
+* I built this example for an upcoming blog post
