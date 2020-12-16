@@ -1,14 +1,33 @@
-import S3 from 'aws-sdk/clients/s3';
+import {CognitoIdentityClient} from '@aws-sdk/client-cognito-identity';
+import {
+  S3Client,
+  GetObjectCommand,
+  ListObjectsCommand,
+  PutObjectCommand,
+} from '@aws-sdk/client-s3';
+import {fromCognitoIdentityPool} from '@aws-sdk/credential-provider-cognito-identity';
 import {ImagePickerResponse} from 'react-native-image-picker';
-import {ACCESS_KEY_ID, BUCKET_NAME, REGION, SECRET_ACCESS_KEY} from './secrets';
+import {
+  ACCESS_KEY_ID,
+  BUCKET_NAME,
+  REGION,
+  IDENTITYPOOLID,
+  SECRET_ACCESS_KEY,
+} from './secrets';
 
 var fs = require('react-native-fs');
 
-const s3 = new S3({
-  accessKeyId: ACCESS_KEY_ID,
-  secretAccessKey: SECRET_ACCESS_KEY,
-  signatureVersion: 'v4',
+const client = new S3Client({
   region: REGION,
+  credentials: {
+    accessKeyId: ACCESS_KEY_ID,
+    secretAccessKey: SECRET_ACCESS_KEY,
+  },
+  // credentials: fromCognitoIdentityPool({
+  //   client: new CognitoIdentityClient({region: REGION}),
+  //   // Replace IDENTITY_POOL_ID with an appropriate Amazon Cognito Identity Pool ID for, such as 'us-east-1:xxxxxx-xxx-4103-9936-b52exxxxfd6'.
+  //   identityPoolId: IDENTITYPOOLID,
+  // }),
 });
 
 export const uploadImageToS3 = async (file: ImagePickerResponse) => {
@@ -31,13 +50,15 @@ export const uploadImageToS3 = async (file: ImagePickerResponse) => {
     },
   })
     .then((res) => {
-      res.blob().then((res) => {
-        s3.putObject({
-          ...s3Params,
-          Body: res,
-          Metadata: {'upload-date': new Date().toISOString()},
-        })
-          .promise()
+      res.blob().then(async (res) => {
+        await client
+          .send(
+            new PutObjectCommand({
+              ...s3Params,
+              Body: res,
+              Metadata: {'upload-date': new Date().toISOString()},
+            }),
+          )
           .catch((err) => {
             console.error('Uploading file failed:', err);
           });
@@ -47,14 +68,19 @@ export const uploadImageToS3 = async (file: ImagePickerResponse) => {
 };
 
 export const getAllS3Files = () => {
-  return s3
-    .listObjectsV2({Bucket: BUCKET_NAME})
-    .promise()
-    .then((res) => res.Contents?.map((file) => file));
+  return client
+    .send(
+      new ListObjectsCommand({
+        Bucket: BUCKET_NAME,
+      }),
+    )
+    .then((res) => res.Contents?.map((file) => file))
+    .catch((err) => console.error(err));
 };
 
 export const getS3File = (filename: string) => {
-  return s3.getObject({Bucket: BUCKET_NAME, Key: filename})
-    .promise()
-    .then((res) => res);
+  return client
+    .send(new GetObjectCommand({Bucket: BUCKET_NAME, Key: filename}))
+    .then((res) => res)
+    .catch((err) => console.error(err));
 };
