@@ -67,6 +67,42 @@
   dependencies:
     tslib "^1.8.0"
 
+"@aws-sdk/client-cognito-identity@3.0.0", "@aws-sdk/client-cognito-identity@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-cognito-identity/-/client-cognito-identity-3.0.0.tgz#2bf09e4892a5e90a68cc5be2e2e7c2b184216432"
+  integrity sha512-VfkQo8T43R3ePcPNCzkvLjWdjOMiBm6qE79wZWilqONyvV6G8tktRBic0ztuvJBTiGLcksgG4OlnojI5cyxTwg==
+  dependencies:
+    "@aws-crypto/sha256-browser" "^1.0.0"
+    "@aws-crypto/sha256-js" "^1.0.0"
+    "@aws-sdk/config-resolver" "3.0.0"
+    "@aws-sdk/credential-provider-node" "3.0.0"
+    "@aws-sdk/fetch-http-handler" "3.0.0"
+    "@aws-sdk/hash-node" "3.0.0"
+    "@aws-sdk/invalid-dependency" "3.0.0"
+    "@aws-sdk/middleware-content-length" "3.0.0"
+    "@aws-sdk/middleware-host-header" "3.0.0"
+    "@aws-sdk/middleware-logger" "3.0.0"
+    "@aws-sdk/middleware-retry" "3.0.0"
+    "@aws-sdk/middleware-serde" "3.0.0"
+    "@aws-sdk/middleware-signing" "3.0.0"
+    "@aws-sdk/middleware-stack" "3.0.0"
+    "@aws-sdk/middleware-user-agent" "3.0.0"
+    "@aws-sdk/node-config-provider" "3.0.0"
+    "@aws-sdk/node-http-handler" "3.0.0"
+    "@aws-sdk/protocol-http" "3.0.0"
+    "@aws-sdk/smithy-client" "3.0.0"
+    "@aws-sdk/url-parser-browser" "3.0.0"
+    "@aws-sdk/url-parser-node" "3.0.0"
+    "@aws-sdk/util-base64-browser" "3.0.0"
+    "@aws-sdk/util-base64-node" "3.0.0"
+    "@aws-sdk/util-body-length-browser" "3.0.0"
+    "@aws-sdk/util-body-length-node" "3.0.0"
+    "@aws-sdk/util-user-agent-browser" "3.0.0"
+    "@aws-sdk/util-user-agent-node" "3.0.0"
+    "@aws-sdk/util-utf8-browser" "3.0.0"
+    "@aws-sdk/util-utf8-node" "3.0.0"
+    tslib "^2.0.0"
+
 "@aws-sdk/client-s3@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@aws-sdk/client-s3/-/client-s3-3.0.0.tgz#8094941d4ee725823a1e2bed4d246d0375184321"
@@ -124,6 +160,15 @@
   integrity sha512-UGLud2uYwN1XOXX0xzSLoCcTrOkBIKIo1Ls0mN0dEryAQlFr2plR52Ze8OdjojXt49ZIrmb4WmPNFfszjwmkdA==
   dependencies:
     "@aws-sdk/signature-v4" "3.0.0"
+    tslib "^1.8.0"
+
+"@aws-sdk/credential-provider-cognito-identity@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-cognito-identity/-/credential-provider-cognito-identity-3.0.0.tgz#1d5d16b3f868a9f506d8f2666de65d1343aa9af2"
+  integrity sha512-pzRMEYgC/nM3zSjQ/fzWljeofUiAOOKp2D2qWK36ChDvWqCUUvFCMCOy+xhOEtyYK2LNLpXxdHuEUAg9mCobCQ==
+  dependencies:
+    "@aws-sdk/client-cognito-identity" "3.0.0"
+    "@aws-sdk/property-provider" "3.0.0"
     tslib "^1.8.0"
 
 "@aws-sdk/credential-provider-env@3.0.0":
