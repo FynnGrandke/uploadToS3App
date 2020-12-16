@@ -32,8 +32,8 @@ Tests are to be implemented at a later stage of this project. (TODO: SOON!)
 
 ## Built With
 
-* [react native](https://github.com/facebook/react-native) - JavaScript library for building user interface
-* [AWS](https://github.com/aws/aws-sdk-js) - The database for modern applications
+* [react native](https://github.com/facebook/react-native) - A framework for building native apps with React
+* [AWS](https://github.com/aws/aws-sdk-js) - AWS SDK for JavaScript in the browser and Node.js
 
 ## Contributing
 
