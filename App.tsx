@@ -1,5 +1,6 @@
-import S3 from 'aws-sdk/clients/s3';
-import React, {useState} from 'react';
+import {getAllS3Files, getS3File, uploadImageToS3} from './s3Service';
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import React, { useState } from 'react'
 import {
   Button,
   Image,
@@ -8,14 +9,10 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  View,
-} from 'react-native';
-import {ImagePickerResponse} from 'react-native-image-picker';
-import {Colors, Header} from 'react-native/Libraries/NewAppScreen';
-import {getAllS3Files, getS3File, uploadImageToS3} from './s3Service';
-import {encode} from 'base64-arraybuffer';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {NetworkFirewall} from 'aws-sdk';
+  View
+} from 'react-native'
+import { ImagePickerResponse } from 'react-native-image-picker'
+import { Colors, Header } from 'react-native/Libraries/NewAppScreen'
 
 var ImagePicker = require('react-native-image-picker');
 
@@ -127,7 +124,7 @@ const App = () => {
             await storeData('filenames', JSON.stringify(storedFilenames));
           }
         });
-      }) as Promise<void>[];
+      });
       console.log('::before');
       await Promise.all(promises);
       console.log('::after');
@@ -159,11 +156,13 @@ const App = () => {
             <Button onPress={() => listObjects()} title="List Objects" />
           </View>
           <View style={styles.imagePane}>
-            {fetchedFilenames.length === 0 ? null : fetchedFilenames.map(async filename => {
-              const file = await getData(filename)
-              console.log(filename, file)
-              return <Image source={file} style={styles.image} />
-            })}
+            {fetchedFilenames.length === 0
+              ? null
+              : fetchedFilenames.map(async (filename) => {
+                  const file = await getData(filename);
+                  console.log(filename, file);
+                  return <Image source={file} style={styles.image} />;
+                })}
           </View>
         </ScrollView>
       </SafeAreaView>
