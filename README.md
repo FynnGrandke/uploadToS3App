@@ -33,7 +33,7 @@ Tests are to be implemented at a later stage of this project. (TODO: SOON!)
 ## Built With
 
 * [react native](https://github.com/facebook/react-native) - A framework for building native apps with React
-* [AWS](https://github.com/aws/aws-sdk-js) - AWS SDK for JavaScript in the browser and Node.js
+* [AWS SDK](https://github.com/aws/aws-sdk-js-v3) - Modularized AWS SDK for JavaScript
 
 ## Contributing
 
