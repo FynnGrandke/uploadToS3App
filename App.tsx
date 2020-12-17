@@ -1,6 +1,6 @@
 import {getAllS3Files, getS3File, uploadImageToS3} from './s3Service';
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import React, { useState } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, {useEffect, useState} from 'react';
 import {
   Button,
   Image,
@@ -9,10 +9,10 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  View
-} from 'react-native'
-import { ImagePickerResponse } from 'react-native-image-picker'
-import { Colors, Header } from 'react-native/Libraries/NewAppScreen'
+  View,
+} from 'react-native';
+import {ImagePickerResponse} from 'react-native-image-picker';
+import {Colors, Header} from 'react-native/Libraries/NewAppScreen';
 
 var ImagePicker = require('react-native-image-picker');
 
@@ -106,11 +106,13 @@ const App = () => {
   };
 
   const [fetchedFilenames, setFetchedFilenames] = useState([]);
+  const [images, setImages] = useState<JSX.Element[]>([]);
 
   const listObjects = () => {
     getAllS3Files().then(async (res) => {
-      const promises = res?.map((s3Object) => {
+      const promises = res.map((s3Object) => {
         return getS3File(s3Object.Key as string).then(async (res) => {
+          if (res == null) return;
           const filename = s3Object.Key as string;
           await storeData(filename, res);
           console.log('stored data');
@@ -135,7 +137,15 @@ const App = () => {
     });
   };
 
-  console.log('render');
+  useEffect(() => {
+    fetchedFilenames.map(async (filename) => {
+      const file = await getData(filename);
+      const image = <Image source={file} style={styles.image} />
+      console.log(filename, file);
+      setImages([...images, image]);
+    });
+  });
+  console.log('render', fetchedFilenames, images);
 
   return (
     <>
@@ -156,13 +166,7 @@ const App = () => {
             <Button onPress={() => listObjects()} title="List Objects" />
           </View>
           <View style={styles.imagePane}>
-            {fetchedFilenames.length === 0
-              ? null
-              : fetchedFilenames.map(async (filename) => {
-                  const file = await getData(filename);
-                  console.log(filename, file);
-                  return <Image source={file} style={styles.image} />;
-                })}
+            {fetchedFilenames.length === 0 ? null : images}
           </View>
         </ScrollView>
       </SafeAreaView>
