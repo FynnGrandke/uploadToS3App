@@ -4,6 +4,7 @@ import {
   GetObjectCommand,
   ListObjectsCommand,
   PutObjectCommand,
+  _Object,
 } from '@aws-sdk/client-s3';
 import {fromCognitoIdentityPool} from '@aws-sdk/credential-provider-cognito-identity';
 import {ImagePickerResponse} from 'react-native-image-picker';
@@ -67,20 +68,28 @@ export const uploadImageToS3 = async (file: ImagePickerResponse) => {
     .catch((err) => console.error('Cannot get blob from file:', err));
 };
 
-export const getAllS3Files = () => {
+export const getAllS3Files: () => Promise<_Object[]> = () => {
   return client
     .send(
       new ListObjectsCommand({
         Bucket: BUCKET_NAME,
       }),
     )
-    .then((res) => res.Contents?.map((file) => file))
-    .catch((err) => console.error(err));
+    .then((res) => {
+      return res.Contents?.map((file) => file) || [];
+    })
+    .catch((err) => {
+      console.error(err);
+      return [];
+    });
 };
 
 export const getS3File = (filename: string) => {
   return client
     .send(new GetObjectCommand({Bucket: BUCKET_NAME, Key: filename}))
     .then((res) => res)
-    .catch((err) => console.error(err));
+    .catch((err) => {
+      console.error(err);
+      return null
+    });
 };
