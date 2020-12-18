@@ -132,7 +132,7 @@ const App = () => {
       console.log('::after');
 
       const filenames = JSON.parse(await getData('filenames'));
-      console.log('fetchedAll', filenames);
+      console.log('fetchedAll', res);
       setFetchedFilenames(filenames);
     });
   };
@@ -140,7 +140,7 @@ const App = () => {
   useEffect(() => {
     fetchedFilenames.map(async (filename) => {
       const file = await getData(filename);
-      const image = <Image source={file} style={styles.image} />
+      const image = <Image source={file} style={styles.image} />;
       console.log(filename, file);
       setImages([...images, image]);
     });
@@ -157,12 +157,12 @@ const App = () => {
           <Header />
           <View style={styles.body}>
             <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
+              <Text style={styles.sectionTitle}>Upload a File</Text>
               <Text style={styles.sectionDescription}>
                 Tab the button to upload a file
               </Text>
+              <Button onPress={() => chooseImage()} title="Upload Image" />
             </View>
-            <Button onPress={() => chooseImage()} title="Upload Image" />
             <Button onPress={() => listObjects()} title="List Objects" />
           </View>
           <View style={styles.imagePane}>
