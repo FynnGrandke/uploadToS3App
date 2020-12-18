@@ -19,7 +19,6 @@ const client = new S3Client({
   },
   // credentials: fromCognitoIdentityPool({
   //   client: new CognitoIdentityClient({region: REGION}),
-  //   // Replace IDENTITY_POOL_ID with an appropriate Amazon Cognito Identity Pool ID for, such as 'us-east-1:xxxxxx-xxx-4103-9936-b52exxxxfd6'.
   //   identityPoolId: IDENTITYPOOLID,
   // }),
 });
