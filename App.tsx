@@ -163,7 +163,13 @@ const App = () => {
               </Text>
               <Button onPress={() => chooseImage()} title="Upload Image" />
             </View>
-            <Button onPress={() => listObjects()} title="List Objects" />
+            <View style={styles.sectionContainer}>
+              <Text style={styles.sectionTitle}>Show all Uploaded Files</Text>
+              <Text style={styles.sectionDescription}>
+                Tab the button to list all uploaded files
+              </Text>
+              <Button onPress={() => listObjects()} title="List Objects" />
+            </View>
           </View>
           <View style={styles.imagePane}>
             {fetchedFilenames.length === 0 ? null : images}
