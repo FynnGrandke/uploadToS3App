@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     marginTop: 32,
     paddingHorizontal: 24,
   },
-  sectionTitle: {
+  title: {
     fontSize: 24,
     fontWeight: '600',
     color: Colors.black,
@@ -142,14 +142,14 @@ const App = () => {
           <Header />
           <View style={styles.body}>
             <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Upload a File</Text>
+              <Text style={styles.title}>Upload a File</Text>
               <Text style={styles.sectionDescription}>
                 Tab the button to upload a file
               </Text>
               <Button onPress={() => chooseImage()} title="Upload Image" />
             </View>
             <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Show all Uploaded Files</Text>
+              <Text style={styles.title}>Show all Uploaded Files</Text>
               <Text style={styles.sectionDescription}>
                 Tab the button to list all uploaded files
               </Text>
