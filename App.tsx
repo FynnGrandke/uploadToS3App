@@ -40,7 +40,6 @@ const styles = StyleSheet.create({
   },
   imagePane: {
     display: 'flex',
-    backgroundColor: 'red',
     height: 100,
     width: '100%',
   },
