@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   body: {
     backgroundColor: Colors.white,
   },
-  sectionContainer: {
+  container: {
     marginTop: 32,
     paddingHorizontal: 24,
   },
@@ -141,14 +141,14 @@ const App = () => {
           style={styles.scrollView}>
           <Header />
           <View style={styles.body}>
-            <View style={styles.sectionContainer}>
+            <View style={styles.container}>
               <Text style={styles.title}>Upload a File</Text>
               <Text style={styles.sectionDescription}>
                 Tab the button to upload a file
               </Text>
               <Button onPress={() => chooseImage()} title="Upload Image" />
             </View>
-            <View style={styles.sectionContainer}>
+            <View style={styles.container}>
               <Text style={styles.title}>Show all Uploaded Files</Text>
               <Text style={styles.sectionDescription}>
                 Tab the button to list all uploaded files
