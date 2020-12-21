@@ -1,5 +1,4 @@
 import {getAllS3Files, getS3File, uploadImageToS3} from './s3Service';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useEffect, useState} from 'react';
 import {
   Button,
@@ -13,6 +12,7 @@ import {
 } from 'react-native';
 import {ImagePickerResponse} from 'react-native-image-picker';
 import {Colors, Header} from 'react-native/Libraries/NewAppScreen';
+import { getData, storeData } from './dataStorage'
 
 var ImagePicker = require('react-native-image-picker');
 
@@ -69,24 +69,6 @@ const App = () => {
         }
       },
     );
-  };
-
-  const storeData = async (itemKey: string, value: Object) => {
-    try {
-      const jsonValue = JSON.stringify(value);
-      await AsyncStorage.setItem(itemKey, jsonValue);
-    } catch (e) {
-      throw new Error(`Could not store data ${itemKey} with value ${value}`);
-    }
-  };
-
-  const getData = async (itemKey: string) => {
-    try {
-      const jsonValue = await AsyncStorage.getItem(itemKey);
-      return jsonValue != null ? JSON.parse(jsonValue) : null;
-    } catch (e) {
-      throw new Error(`Could not get data from key ${itemKey}`);
-    }
   };
 
   const [fetchedFilenames, setFetchedFilenames] = useState([]);
