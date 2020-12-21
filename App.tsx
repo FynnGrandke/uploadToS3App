@@ -116,7 +116,7 @@ const App = () => {
 
 
       const filenames = JSON.parse(await getData('filenames'));
-      console.log('fetchedAll', res);
+
       setFetchedFilenames(filenames);
     });
   };
@@ -129,7 +129,7 @@ const App = () => {
       setImages([...images, image]);
     });
   });
-  console.log('render', fetchedFilenames, images);
+
 
   return (
     <>
