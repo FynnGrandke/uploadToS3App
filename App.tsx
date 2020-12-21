@@ -111,9 +111,9 @@ const App = () => {
           }
         });
       });
-      console.log('::before');
+
       await Promise.all(promises);
-      console.log('::after');
+
 
       const filenames = JSON.parse(await getData('filenames'));
       console.log('fetchedAll', res);
