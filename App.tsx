@@ -11,7 +11,7 @@ import {
   View,
 } from 'react-native';
 import {ImagePickerResponse} from 'react-native-image-picker';
-import {Colors, Header} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 import { getData, storeData } from './dataStorage'
 
 var ImagePicker = require('react-native-image-picker');
@@ -120,7 +120,6 @@ const App = () => {
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={styles.scrollView}>
-          <Header />
           <View style={styles.body}>
             <View style={styles.container}>
               <Text style={styles.title}>Upload a File</Text>
