@@ -11,10 +11,18 @@ import {
   View,
 } from 'react-native';
 import {ImagePickerResponse} from 'react-native-image-picker';
-import {Colors, Header} from 'react-native/Libraries/NewAppScreen';
-import { getData, storeData } from './dataStorage'
+import {getData, storeData} from './dataStorage';
 
 var ImagePicker = require('react-native-image-picker');
+
+const Colors = {
+  black: '#000',
+  dark: '#444',
+  light: '#DAE1E7',
+  lighter: '#F3F3F3',
+  primary: '#1292B4',
+  white: '#FFF',
+};
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -96,7 +104,6 @@ const App = () => {
 
       await Promise.all(promises);
 
-
       const filenames = JSON.parse(await getData('filenames'));
 
       setFetchedFilenames(filenames);
@@ -112,7 +119,6 @@ const App = () => {
     });
   });
 
-
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -120,7 +126,6 @@ const App = () => {
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={styles.scrollView}>
-          <Header />
           <View style={styles.body}>
             <View style={styles.container}>
               <Text style={styles.title}>Upload a File</Text>
