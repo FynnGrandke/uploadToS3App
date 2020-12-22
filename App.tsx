@@ -11,10 +11,18 @@ import {
   View,
 } from 'react-native';
 import {ImagePickerResponse} from 'react-native-image-picker';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-import { getData, storeData } from './dataStorage'
+import {getData, storeData} from './dataStorage';
 
 var ImagePicker = require('react-native-image-picker');
+
+const Colors = {
+  black: '#000',
+  dark: '#444',
+  light: '#DAE1E7',
+  lighter: '#F3F3F3',
+  primary: '#1292B4',
+  white: '#FFF',
+};
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -96,7 +104,6 @@ const App = () => {
 
       await Promise.all(promises);
 
-
       const filenames = JSON.parse(await getData('filenames'));
 
       setFetchedFilenames(filenames);
@@ -111,7 +118,6 @@ const App = () => {
       setImages([...images, image]);
     });
   });
-
 
   return (
     <>
